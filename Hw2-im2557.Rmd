@@ -1,0 +1,37 @@
+---
+title: "Hw2"
+author: 'IRENE MARTINEZ MORATA (UNI: im2557)'
+date: "10/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+getwd()
+```
+
+## Problem 1
+
+```{r Problem 1}
+problem1 <- read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+                       sheet = "Mr. Trash Wheel",
+                       range = "A2:N408",
+                       ) %>%
+janitor::clean_names() %>% 
+drop_na(dumpster) %>% 
+mutate(sports_balls = round(sports_balls, 0))
+       
+
+
+```
+
+## Including Plots
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
