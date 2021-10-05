@@ -45,13 +45,38 @@ prec19 <- read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",
 
 prob1.2 = 
   bind_rows(prec18, prec19) %>% 
-  mutate(month_name = month.name[month])
+  mutate(month = month.name[as.numeric(month)])
 
 ```
 
+#Problem 2
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r Problem2, echo=TRUE}
+Prob2.1 <- read_csv("pols-month.csv") %>% 
+  separate(mon, into = c("year", "month", "day")) %>% 
+  mutate(month = month.name[as.numeric(month)]) %>% 
+  mutate(president = ifelse(prez_dem == 1, "dem", "gop")) %>% 
+  select(-prez_dem, -prez_gop, -day) %>% 
+  mutate(year = as.numeric(year))
+
+Prob2.2 <- read_csv("snp.csv") %>% 
+  separate(date, into = c("month", "day", "year")) %>% 
+  mutate(month = month.name[as.numeric(month)]) %>% 
+  select(-day) %>% 
+  relocate(year, month)
+
+Prob2.3 <- read_csv("unemployment.csv") %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(
+    jan:dec, 
+    names_to = "month",
+    values_to = "unemployment_rate"
+  ) %>% 
+  mutate(year = as.numeric(year))
+
+inner_join(Prob2.1, Prob2.3, by = c("year", "month"))
+
 ```
-
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+#Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
