@@ -57,13 +57,18 @@ Prob2.1 <- read_csv("pols-month.csv") %>%
   mutate(month = month.name[as.numeric(month)]) %>% 
   mutate(president = ifelse(prez_dem == 1, "dem", "gop")) %>% 
   select(-prez_dem, -prez_gop, -day) %>% 
-  mutate(year = as.numeric(year))
+  mutate(year = as.numeric(year)) 
+
 
 Prob2.2 <- read_csv("snp.csv") %>% 
   separate(date, into = c("month", "day", "year")) %>% 
   mutate(month = month.name[as.numeric(month)]) %>% 
   select(-day) %>% 
-  relocate(year, month)
+  relocate(year, month) %>% 
+  mutate(year = case_when(
+  year >= 50 ~ paste0("19", year), 
+  year <= 15 ~ paste0("20", year)),
+  year = as.numeric(year))
 
 Prob2.3 <- read_csv("unemployment.csv") %>% 
   janitor::clean_names() %>% 
@@ -72,11 +77,47 @@ Prob2.3 <- read_csv("unemployment.csv") %>%
     names_to = "month",
     values_to = "unemployment_rate"
   ) %>% 
-  mutate(year = as.numeric(year))
+  mutate(
+    year = as.numeric(year),
+    month = replace(month, month == "jan", "January"),
+    month = replace(month, month == "feb", "February"),
+    month = replace(month, month == "mar", "March"),
+    month = replace(month, month == "apr", "April"),
+    month = replace(month, month == "may", "May"),
+    month = replace(month, month == "jun", "June"),
+    month = replace(month, month == "jul", "July"),
+    month = replace(month, month == "aug", "August"),
+    month = replace(month, month == "sep", "September"),
+    month = replace(month, month == "oct", "October"),
+    month = replace(month, month == "nov", "November"),
+    month = replace(month, month == "dec", "December"))
 
-inner_join(Prob2.1, Prob2.3, by = c("year", "month"))
+  
+Full_prob2 <- inner_join(Prob2.1, Prob2.2, by = c("year", "month"))
+
+Full_prob2.1 <- inner_join(Full_prob2, Prob2.3, by = c("year", "month"))
+
+summary(Prob2.1)
+summary(Prob2.2)
+summary(Prob2.3)
+summary(Full_prob2.1)
 
 ```
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+The first database (coded as Prob2.1) contained 822 observations with information about the distribution of representatives, senators and presidents from the republican or democrat parties at selected time points from 1947 to 2015. 
+The second database (coded as Prob2.2) contained 787 observations with information on gross domestic product (GDP) from 1950 until 2015. The mean GDP in such time frame was 474.89 and the median 138.53.
+The third database (coded as Prob2.3) contained 816 observations for unemployment rate at different months from 1948 until 2015. The mean unemployment rate was 5.83 and the median 5.60-
 
-#Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
+In total, after combining the data sets, 786 observations had data across all the three data sets, the time frame of the data observations was from 1950 to 2015. The set of variables included: year, month of the observation, president party, democrat senators and governors, republican senators and governors, GDP, and unemployment rate among others. The median GDP across observations was 137.26, and the median unemployment rate was 5.6
+
+```{r Problem 3}
+Prob3 <- read_csv("Popular_Baby_Names.csv") %>% 
+janitor::clean_names() %>% 
+  distinct(.keep_all= TRUE) %>% 
+  mutate(ethnicity = str_to_lower(ethnicity)) %>% 
+  mutate(childs_first_name = str_to_lower(childs_first_name)) %>% 
+  mutate(gender = str_to_lower(gender)) %>% 
+  filter(childs_first_name == olivia)
+
+  
+
+```
