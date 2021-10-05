@@ -33,24 +33,19 @@ prec18 <- read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",
                        range = "A2:B14") %>%
   janitor::clean_names() %>% 
   mutate(month = as.numeric(month)) %>% 
-   mutate(year = ifelse(total > 0, "2018", NA))
+   mutate(year = 2018)
 
 prec19 <- read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",
                        sheet = "2019 Precipitation",
                        range = "A2:B14") %>% 
   janitor::clean_names() %>% 
   mutate(month = as.numeric(month)) %>%
-  mutate(year = ifelse(total > 0, "2019", NA))
+  drop_na() %>% 
+  mutate(year = 2019)
 
 prob1.2 = 
-  bind_rows(prec18, prec19) %>%
-  janitor::clean_names() %>%
-
-problem1.2 <- full_join(prec18, prec19, by = "month") 
-
-
-merge.data.frame()
-
+  bind_rows(prec18, prec19) %>% 
+  mutate(month_name = month.name[month])
 
 ```
 
