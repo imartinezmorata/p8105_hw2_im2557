@@ -12,9 +12,9 @@ library(readxl)
 getwd()
 ```
 
-## Problem 1
+## Problem 1.1
 
-```{r Problem 1}
+```{r Problem 1.1}
 problem1 <- read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",
                        sheet = "Mr. Trash Wheel",
                        range = "A2:N408",
@@ -23,11 +23,36 @@ janitor::clean_names() %>%
 drop_na(dumpster) %>% 
 mutate(sports_balls = round(sports_balls, 0))
        
+```
+
+## Problem 1.2
+
+```{r Problem 1.2}
+prec18 <- read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+                       sheet = "2018 Precipitation",
+                       range = "A2:B14") %>%
+  janitor::clean_names() %>% 
+  mutate(month = as.numeric(month)) %>% 
+   mutate(year = ifelse(total > 0, "2018", NA))
+
+prec19 <- read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+                       sheet = "2019 Precipitation",
+                       range = "A2:B14") %>% 
+  janitor::clean_names() %>% 
+  mutate(month = as.numeric(month)) %>%
+  mutate(year = ifelse(total > 0, "2019", NA))
+
+prob1.2 = 
+  bind_rows(prec18, prec19) %>%
+  janitor::clean_names() %>%
+
+problem1.2 <- full_join(prec18, prec19, by = "month") 
+
+
+merge.data.frame()
 
 
 ```
-
-## Including Plots
 
 
 ```{r pressure, echo=FALSE}
