@@ -15,41 +15,51 @@ getwd()
 ## Problem 1.1
 
 ```{r Problem 1.1}
-problem1 <- read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+problem1 <- read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
                        sheet = "Mr. Trash Wheel",
-                       range = "A2:N408",
+                       range = "A2:N534",
                        ) %>%
 janitor::clean_names() %>% 
 drop_na(dumpster) %>% 
 mutate(sports_balls = round(sports_balls, 0))
+
+problem1a <- problem1 %>% 
+  filter(year == "2019")
+#summary(problem1a)
        
 ```
 
 ## Problem 1.2
 
 ```{r Problem 1.2}
-prec18 <- read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+prec18 <- read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
                        sheet = "2018 Precipitation",
                        range = "A2:B14") %>%
   janitor::clean_names() %>% 
-  mutate(month = as.numeric(month)) %>% 
+  mutate(month = as.numeric(month),
+         total = as.numeric(total)) %>% 
    mutate(year = 2018)
+#summary(prec18)
 
-prec19 <- read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+prec19 <- read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
                        sheet = "2019 Precipitation",
                        range = "A2:B14") %>% 
   janitor::clean_names() %>% 
-  mutate(month = as.numeric(month)) %>%
+  mutate(month = as.numeric(month), 
+         total = as.numeric(total)) %>%
   drop_na() %>% 
   mutate(year = 2019)
 
 prob1.2 = 
   bind_rows(prec18, prec19) %>% 
   mutate(month = month.name[as.numeric(month)])
-
 ```
+Data description:In the first dataset, the wheel collection totals (labeled as Problem 1) was composed of  composed of 14 columns, some of the variables included dumpster, month, year, glass bottles and sport balls, among others. The median sports_balls in 209 was 9.00 and the mean was 10.3 
 
-#Problem 2
+The second and third datasets (labelled as problem 1.2 and 1.3) are the precipitation data for 2018 and 2019 per month.
+The median precipitation in 2018 was 5.45 and the mean was 5.86.
+
+## Problem 2
 
 ```{r Problem2, echo=TRUE}
 Prob2.1 <- read_csv("pols-month.csv") %>% 
@@ -97,10 +107,10 @@ Full_prob2 <- inner_join(Prob2.1, Prob2.2, by = c("year", "month"))
 
 Full_prob2.1 <- inner_join(Full_prob2, Prob2.3, by = c("year", "month"))
 
-summary(Prob2.1)
-summary(Prob2.2)
-summary(Prob2.3)
-summary(Full_prob2.1)
+#summary(Prob2.1)
+#summary(Prob2.2)
+#summary(Prob2.3)
+#summary(Full_prob2.1)
 
 ```
 The first database (coded as Prob2.1) contained 822 observations with information about the distribution of representatives, senators and presidents from the republican or democrat parties at selected time points from 1947 to 2015. 
@@ -108,6 +118,8 @@ The second database (coded as Prob2.2) contained 787 observations with informati
 The third database (coded as Prob2.3) contained 816 observations for unemployment rate at different months from 1948 until 2015. The mean unemployment rate was 5.83 and the median 5.60-
 
 In total, after combining the data sets, 786 observations had data across all the three data sets, the time frame of the data observations was from 1950 to 2015. The set of variables included: year, month of the observation, president party, democrat senators and governors, republican senators and governors, GDP, and unemployment rate among others. The median GDP across observations was 137.26, and the median unemployment rate was 5.6
+
+## Problem 3
 
 ```{r Problem 3}
 Prob3 <- read_csv("Popular_Baby_Names.csv") %>% 
@@ -125,9 +137,19 @@ Prob3.1 <- Prob3 %>%
   filter(childs_first_name == "olivia" & gender == "female") %>% 
   select(-gender, -childs_first_name, -count) %>% 
 pivot_wider(names_from = year_of_birth, values_from = rank)
-  
 
+print(Prob3.1)
 
-  
+Prob3.2 <- Prob3 %>% 
+  filter(rank == "1" & gender == "male") %>% 
+  select(-gender,-count, -rank) %>% 
+  pivot_wider(names_from = year_of_birth, values_from = childs_first_name)
 
+print(Prob3.2)
+
+plot <- Prob3 %>% 
+  filter(ethnicity == "white non hispanic" & year_of_birth == "2016") %>% 
+  ggplot(aes(x = rank, y = count)) + geom_point()
+
+print(plot)
 ```
