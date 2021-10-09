@@ -25,7 +25,7 @@ mutate(sports_balls = round(sports_balls, 0))
 
 problem1a <- problem1 %>% 
   filter(year == "2019")
-#summary(problem1a)
+
        
 ```
 
@@ -39,7 +39,7 @@ prec18 <- read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
   mutate(month = as.numeric(month),
          total = as.numeric(total)) %>% 
    mutate(year = 2018)
-#summary(prec18)
+
 
 prec19 <- read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
                        sheet = "2019 Precipitation",
@@ -54,10 +54,11 @@ prob1.2 =
   bind_rows(prec18, prec19) %>% 
   mutate(month = month.name[as.numeric(month)])
 ```
-Data description:In the first dataset, the wheel collection totals (labeled as Problem 1) was composed of  composed of 14 columns, some of the variables included dumpster, month, year, glass bottles and sport balls, among others. The median sports_balls in 209 was 9.00 and the mean was 10.3 
+The Mr. Trash Wheel dataset provides information about the quantity and content of trash in the Mr.Trash Wheel collector, picked up from `r min(pull(problem1, "date"))` to `r max(pull(problem1, "date"))`. 
+In the first data set, the wheel collection totals was composed of  composed `r colnames(problem1)`,. The median sports_balls in 2019 was `r median(pull(problem1, "sports_balls"))` 
 
-The second and third datasets (labelled as problem 1.2 and 1.3) are the precipitation data for 2018 and 2019 per month.
-The median precipitation in 2018 was 5.45 and the mean was 5.86.
+The second and third data sets contain the precipitation data (in monthly total inches) for the years 2018 and 2019 in Baltimore. There is available data for `r count(prec18)` months, during these the average rainfall in 2018 was `r mean(pull(prec18, "total"))` . For 2019, there is available data for `r count(prec19)` months, and the average rainfall for this year was `r mean(pull(prec19, "total"))`. The cumulative total precipitation during 2018 was `r sum(pull(prec18, "total"))`, and `r sum(pull(prec19, "total"))`, in 2019.
+
 
 ## Problem 2
 
@@ -107,17 +108,13 @@ Full_prob2 <- inner_join(Prob2.1, Prob2.2, by = c("year", "month"))
 
 Full_prob2.1 <- inner_join(Full_prob2, Prob2.3, by = c("year", "month"))
 
-#summary(Prob2.1)
-#summary(Prob2.2)
-#summary(Prob2.3)
-#summary(Full_prob2.1)
 
 ```
-The first database (coded as Prob2.1) contained 822 observations with information about the distribution of representatives, senators and presidents from the republican or democrat parties at selected time points from 1947 to 2015. 
-The second database (coded as Prob2.2) contained 787 observations with information on gross domestic product (GDP) from 1950 until 2015. The mean GDP in such time frame was 474.89 and the median 138.53.
-The third database (coded as Prob2.3) contained 816 observations for unemployment rate at different months from 1948 until 2015. The mean unemployment rate was 5.83 and the median 5.60-
+The first database contained `r count(Prob2.1)` observations with information about the distribution of representatives, senators and presidents from the republican or democrat parties by month from `r min(pull(Prob2.1, "year"))` until `r max(pull(Prob2.1, "year"))`years. The variables included `r colnames(Prob2.1)`
+The second database (coded as Prob2.2) contained `r count(Prob2.2)` observations with information on gross domestic product (GDP) from year `r min(pull(Prob2.2, "year"))`, until `r max(pull(Prob2.2, "year"))` . The mean GDP in such time frame was `r mean(pull(Prob2.2, "close"))`, and the median was `r median(pull(Prob2.2, "close"))`
+The third database (coded as Prob2.3) contained `r count(Prob2.3)` observations for unemployment rate at different months from `r min(pull(Prob2.3, "year"))` until `r max(pull(Prob2.3, "year"))` . The mean unemployment rate was `r mean(pull(Prob2.3, "unemployment_rate"))`
 
-In total, after combining the data sets, 786 observations had data across all the three data sets, the time frame of the data observations was from 1950 to 2015. The set of variables included: year, month of the observation, president party, democrat senators and governors, republican senators and governors, GDP, and unemployment rate among others. The median GDP across observations was 137.26, and the median unemployment rate was 5.6
+In total, after combining the data sets, `r count(Full_prob2.1)` observations had data across all the three data sets, the time frame of the data observations was from `r min(pull(Full_prob2.1, "year"))` until `r max(pull(Full_prob2.1, "year"))` . The set of variables included: `r colnames(Full_prob2.1)`. The median GDP across observations `r median(pull(Full_prob2.1, "close"))` , and the median unemployment rate was `r median(pull(Full_prob2.1, "unemployment_rate"))`
 
 ## Problem 3
 
